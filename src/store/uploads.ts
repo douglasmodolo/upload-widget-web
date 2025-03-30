@@ -4,7 +4,6 @@ import { immer } from "zustand/middleware/immer";
 import { uploadFileToStorage } from "../http/updaload-file-to-storage";
 import { CanceledError } from "axios";
 import { useShallow } from "zustand/shallow";
-import { s } from "motion/react-client";
 
 export type Upload = {
     name: string,
