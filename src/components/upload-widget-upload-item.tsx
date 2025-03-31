@@ -16,7 +16,12 @@ export function UploadWidgetUploadItem({
 }: UploadWidgetUploadItemProps) {
     const cancelUpload = useUploads(store => store.cancelUpload);
 
-    const progress = Math.min(Math.round(upload.uploadSizeInBytes / upload.originalSizeInBytes * 100), 100);
+    const progress = Math.min(
+        upload.compressedSizeInBytes
+            ? Math.round(upload.uploadSizeInBytes / upload.compressedSizeInBytes * 100)
+            : 0,
+        100
+    );
 
     return (
         <motion.div 
@@ -35,7 +40,7 @@ export function UploadWidgetUploadItem({
                     <span className="line-through">{formatBytes(upload.originalSizeInBytes)}</span>
                     <div className="size-1 rounded-full bg-zinc-700" />
                     <span>
-                        300KB
+                        {upload.compressedSizeInBytes ? formatBytes(upload.compressedSizeInBytes) : '-'}
                         <span className="text-green-400 ml-1">
                             -94%
                         </span>
@@ -70,7 +75,8 @@ export function UploadWidgetUploadItem({
                 </Button>
 
                 <Button 
-                    disabled={upload.status !== 'success'} 
+                    disabled={!upload.remoteUrl}
+                    onClick={() => navigator.clipboard.writeText(upload.remoteUrl || '')} 
                     size="icon-sm"
                 >
                     <Link2 className="size-4" strokeWidth={1.5} />
